@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }))
 
 // 定义路由前缀和对应的路由
 app.use('/api/goals', require('./routes/goalRoutes'))
+app.use('/api/users', require('./routes/userRoutes'))
 
 // 处理错误
 app.use(errorHandler)
