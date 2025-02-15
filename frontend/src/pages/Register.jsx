@@ -1,5 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaUser } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import { reset, registerAsync } from '../features/auth/authSlice'
+import Spinner from '../components/Spinner'
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -9,7 +14,28 @@ function Register() {
     password2: '',
   })
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const { name, email, password, password2 } = formData
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
+
+  // 当信息提交更新后检查状态
+  useEffect(() => {
+    if (isError) {
+      toast.error(message)
+    }
+
+    // 本地有用户直接导航到dashboard
+    if (isSuccess || user) {
+      navigate('/')
+    }
+
+    dispatch(reset())
+  }, [user, isError, isSuccess, message, navigate, dispatch])
 
   function onChange(e) {
     // 利用计算属性覆盖之前的属性
@@ -22,6 +48,22 @@ function Register() {
   function onSubmit(e) {
     // 组织默认表单提交
     e.preventDefault()
+
+    if (password !== password2) {
+      toast.error('密码不一致')
+    } else {
+      const userData = {
+        name,
+        email,
+        password,
+      }
+      // 注册信息
+      dispatch(registerAsync(userData))
+    }
+  }
+
+  if (isLoading) {
+    return <Spinner />
   }
 
   return (
