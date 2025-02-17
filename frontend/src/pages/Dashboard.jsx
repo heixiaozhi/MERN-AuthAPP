@@ -1,16 +1,15 @@
-import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import GoalForm from '../components/GoalForm'
 import Spinner from '../components/Spinner'
 import { getGoalsAsync, reset } from '../features/goals/goalSlice'
 import GoalItem from '../components/GoalItem'
+import useAuth from '../hooks/useAuth'
 
 function Dashboard() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { user } = useAuth()
 
-  const user = useSelector((state) => state.auth.user)
   const { goals, isError, isLoading, message } = useSelector(
     (state) => state.goals
   )
@@ -24,16 +23,12 @@ function Dashboard() {
 
   // 首次执行时加载数据
   useEffect(() => {
-    if (!user) {
-      navigate('/login')
-    }
-
     dispatch(getGoalsAsync())
 
     return () => {
       dispatch(reset())
     }
-  }, [user, navigate, dispatch])
+  }, [dispatch])
 
   if (isLoading) {
     return <Spinner />
