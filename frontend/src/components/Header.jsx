@@ -24,7 +24,7 @@ function Header() {
       <ul>
         {user ? (
           <li>
-            <Link onClick={handlerLogout}>
+            <Link to='/login' onClick={handlerLogout}>
               <FaSignOutAlt /> Logout
             </Link>
           </li>

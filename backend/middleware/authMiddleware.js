@@ -5,7 +5,6 @@ const User = require('../models/userModel')
 // 验证 Token 的中间件
 const authenticateToken = asyncHandler(async (req, res, next) => {
   let token
-
   // 认证属性存在获取请求头的token
   if (
     req.headers.authorization &&
@@ -19,7 +18,6 @@ const authenticateToken = asyncHandler(async (req, res, next) => {
 
       // 从token中获取用户 同时排除密码字段
       req.user = await User.findById(decoded.id).select('-password')
-
       next()
     } catch (error) {
       console.log(error)

@@ -17,7 +17,6 @@ const login = async (userData) => {
   // axios 会自动抛出错误
   const response = await axios.post(API_URL + '/login', userData)
 
-  console.log(response)
   // 储存在本地
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data))
